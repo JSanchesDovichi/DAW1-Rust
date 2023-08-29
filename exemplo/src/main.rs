@@ -1,8 +1,10 @@
 use rocket::{launch};
+use rocket_dyn_templates::Template;
 
 mod conexao;
 mod pessoas;
 mod pessoa_dao;
+mod paginas;
 
 #[launch]
 async fn rocket() -> _ {
@@ -11,6 +13,8 @@ async fn rocket() -> _ {
     };
 
     rocket::build()
+        .attach(Template::fairing())
         .manage(handler_database)
+        .mount("/", paginas::rotas())
         .mount("/pessoas", pessoas::rotas())
 }

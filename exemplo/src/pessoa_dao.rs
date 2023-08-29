@@ -12,10 +12,10 @@ use std::str::FromStr;
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Pessoa {
     #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
-    id: Option<ObjectId>,
+    pub id: Option<ObjectId>,
 
-    nome: String,
-    idade: i32,
+    pub nome: String,
+    pub idade: i32,
 }
 
 pub struct ColecaoPessoas {
