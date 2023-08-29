@@ -39,8 +39,8 @@ impl ColecaoPessoas {
                 let map = resultados.map(|pessoa| pessoa);
                 let pessoas_encontradas = map.collect::<Vec<_>>().await;
 
-                for evento_recuperado in pessoas_encontradas.into_iter().flatten() {
-                    lista_pessoas_encontradas.push(evento_recuperado);
+                for pessoa_recuperada in pessoas_encontradas.into_iter().flatten() {
+                    lista_pessoas_encontradas.push(pessoa_recuperada);
                 }
 
                 lista_pessoas_encontradas
