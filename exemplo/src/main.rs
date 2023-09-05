@@ -5,6 +5,11 @@ mod conexao;
 mod pessoas;
 mod pessoa_dao;
 mod paginas;
+mod chave;
+
+mod servidor;
+
+mod emprestimo;
 
 #[launch]
 async fn rocket() -> _ {
