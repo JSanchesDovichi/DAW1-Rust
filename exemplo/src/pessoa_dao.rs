@@ -4,12 +4,13 @@ use mongodb::bson::doc;
 use rocket::log::private::error;
 use rocket::serde::json::Json;
 use rocket::State;
-use serde::{Deserialize, Serialize};
+use rocket::serde::{Deserialize, Serialize};
 use rocket::futures::StreamExt;
 use rocket::http::Status;
 use std::str::FromStr;
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(crate = "rocket::serde")]
 pub struct Pessoa {
     #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
     pub id: Option<ObjectId>,

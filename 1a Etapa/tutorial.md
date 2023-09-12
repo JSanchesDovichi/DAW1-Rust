@@ -1,13 +1,12 @@
 # Pre-requisitos:
-
-### Instalar Docker Compose (se não existir): 
+### Instalação do docker-compose:
 ```
-sudo apt install docker-compose
+sudo apt-get install docker-compose-plugin
 ```
 
 ### Banco de dados:
 ```
-sudo docker-compose up -d
+sudo docker compose up -d
 ```
 
 ### Dependência build-essential:

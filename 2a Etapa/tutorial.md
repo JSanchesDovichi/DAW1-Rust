@@ -3,13 +3,17 @@
 cargo new NOME_PROJETO
 ```
 
-### Adicionar dependências ao projeto:
+### Instalação da framework Rocket:
 * No arquivo Cargo.toml, adicionar na seção [dependencies]:
 ```
 rocket = { version = "0.5.0-rc.3", features = ["json"] }
 rocket_dyn_templates = { version = "0.1.0-rc.3", features = ["tera"] }
+```
+
+### Instalação de outras dependências necessárias:
+* No arquivo Cargo.toml, adicionar na seção [dependencies]:
+```
 mongodb = "2.6.1"
-serde = "1.0.188"
 ```
 
 ### Mudar porta do servidor:
