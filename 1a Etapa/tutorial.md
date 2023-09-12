@@ -1,13 +1,4 @@
-# Pre-requisitos:
-### Instalação do docker-compose:
-```
-sudo apt-get install docker-compose-plugin
-```
-
-### Banco de dados:
-```
-sudo docker compose up -d
-```
+# Instalação da linguagem Rust:
 
 ### Dependência build-essential:
 ```
