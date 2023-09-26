@@ -3,18 +3,27 @@ use rocket::serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug)]
 #[serde(crate = "rocket::serde")]
-enum EstadoChave {
+pub enum EstadoChave {
     Emprestada,
     Disponivel
 }
 
 #[derive(Deserialize, Serialize, Debug)]
 #[serde(crate = "rocket::serde")]
-struct Chave {
+pub struct Chave {
     #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
-    id: Option<ObjectId>,
+    pub id: Option<ObjectId>,
 
-    nome: String,
-    situacao: EstadoChave,
-    ativo: bool
+    pub nome: String,
+
+    #[serde(skip_deserializing)]
+    pub situacao: EstadoChave,
+
+    pub ativo: bool
+}
+
+impl Default for EstadoChave {
+    fn default() -> Self {
+        EstadoChave::Disponivel
+    }
 }

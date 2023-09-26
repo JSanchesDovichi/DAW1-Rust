@@ -2,14 +2,14 @@ use rocket::{launch};
 use rocket_dyn_templates::Template;
 
 mod conexao;
-mod pessoas;
-mod pessoa_dao;
 mod paginas;
-mod chave;
+mod classes;
 
-mod servidor;
+mod rotas;
 
-mod emprestimo;
+mod dao;
+
+use rotas::{chaves, servidor};
 
 #[launch]
 async fn rocket() -> _ {
@@ -21,7 +21,9 @@ async fn rocket() -> _ {
         .attach(Template::fairing())
         .manage(handler_database)
         .mount("/", paginas::rotas())
-        .mount("/pessoas", pessoas::rotas())
+        .mount("/chaves", chaves::rotas())
+        .mount("/servidores", servidor::rotas())
+        //.mount("/pessoas", pessoas::rotas())
         //.mount("/debug", rocket::routes![listar_string_json])
 }
 

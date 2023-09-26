@@ -1,3 +1,6 @@
+use mongodb::bson::Bson::DateTime;
+use mongodb::{bson};
+use crate::classes::chave::Chave;
 use mongodb::bson::oid::ObjectId;
 use mongodb::{Collection, Database};
 use mongodb::bson::doc;
@@ -9,42 +12,32 @@ use rocket::futures::StreamExt;
 use rocket::http::Status;
 use std::str::FromStr;
 
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(crate = "rocket::serde")]
-pub struct Pessoa {
-    #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
-    pub id: Option<ObjectId>,
-
-    pub nome: String,
-    pub idade: i32,
+pub struct ColecaoChaves {
+    pub colecao: Collection<Chave>,
 }
 
-pub struct ColecaoPessoas {
-    pub colecao: Collection<Pessoa>,
-}
-
-impl ColecaoPessoas {
+impl ColecaoChaves {
     pub fn default(database: &State<Database>) -> Self {
-        ColecaoPessoas {
-            colecao: database.collection("Pessoas")
+        ColecaoChaves {
+            colecao: database.collection("Chaves")
         }
     }
 
-    pub async fn buscar_pessoas(&self) -> Vec<Pessoa> {
+    pub async fn listar_chaves(&self) -> Vec<Chave> {
         let filtro = doc![];
 
         match self.colecao.find(filtro, None).await {
             Ok(resultados) => {
-                let mut lista_pessoas_encontradas = vec![];
+                let mut lista_chaves_encontradas = vec![];
 
                 let map = resultados.map(|pessoa| pessoa);
-                let pessoas_encontradas = map.collect::<Vec<_>>().await;
+                let chaves_encontradas = map.collect::<Vec<_>>().await;
 
-                for pessoa_recuperada in pessoas_encontradas.into_iter().flatten() {
-                    lista_pessoas_encontradas.push(pessoa_recuperada);
+                for chave_encontrada in chaves_encontradas.into_iter().flatten() {
+                    lista_chaves_encontradas.push(chave_encontrada);
                 }
 
-                lista_pessoas_encontradas
+                lista_chaves_encontradas
             }
             Err(e) => {
                 error!("{e}");
@@ -53,7 +46,7 @@ impl ColecaoPessoas {
         }
     }
 
-    pub async fn buscar_pessoa(&self, id: &str) -> Option<Pessoa> {
+    pub async fn buscar_chave(&self, id: &str) -> Option<Chave> {
         let Ok(id_convertido) = ObjectId::from_str(id) else {
             return None;
         };
@@ -63,8 +56,8 @@ impl ColecaoPessoas {
         ];
 
         match self.colecao.find_one(filtro, None).await {
-            Ok(pessoa_encontrada) => {
-                pessoa_encontrada
+            Ok(chave_encontrada) => {
+                chave_encontrada
             }
             Err(e) => {
                 println!("{e}");
@@ -73,8 +66,10 @@ impl ColecaoPessoas {
         }
     }
 
-    pub async fn adicionar_pessoa(&self, pessoa_nova: Json<Pessoa>) -> Option<ObjectId> {
-        match self.colecao.insert_one(&*pessoa_nova, None).await {
+    pub async fn adicionar_chave(&self, mut chave_nova: Json<Chave>) -> Option<ObjectId> {
+        chave_nova.ativo = true;
+
+        match self.colecao.insert_one(&*chave_nova, None).await {
             Ok(resultado) => {
                 resultado.inserted_id.as_object_id()
             }
@@ -85,9 +80,9 @@ impl ColecaoPessoas {
         }
     }
 
-    pub async fn remover_pessoa(&self, pessoa: Json<Pessoa>) -> Status {
+    pub async fn remover_chave(&self, chave: Json<Chave>) -> Status {
         let filtro = doc![
-            "nome": &pessoa.nome
+            "nome": &chave.nome
         ];
 
         match self.colecao.delete_one(filtro, None).await {
@@ -105,15 +100,15 @@ impl ColecaoPessoas {
         }
     }
 
-    pub async fn atualizar_pessoa(&self, pessoa: Json<Pessoa>) -> Status {
+    pub async fn atualizar_chave(&self, chave: Json<Chave>) -> Status {
         let filtro = doc![
-            "_id": pessoa.id
+            "_id": chave.id
         ];
 
         let atualizacao = doc![
             "$set": doc![
-                 "nome": &pessoa.nome,
-            "idade": pessoa.idade
+                 "nome": &chave.nome,
+                //"idade": chave.idade
             ]
         ];
 
