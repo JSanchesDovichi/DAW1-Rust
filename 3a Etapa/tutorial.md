@@ -3,22 +3,33 @@
 # Chave
 ```
 use mongodb::bson::oid::ObjectId;
-use serde::{Deserialize, Serialize};
+use rocket::serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug)]
-enum EstadoChave {
+#[serde(crate = "rocket::serde")]
+pub enum EstadoChave {
     Emprestada,
     Disponivel
 }
 
 #[derive(Deserialize, Serialize, Debug)]
-struct Chave {
+#[serde(crate = "rocket::serde")]
+pub struct Chave {
     #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
-    id: Option<ObjectId>,
+    pub id: Option<ObjectId>,
 
-    nome: String,
-    situacao: EstadoChave,
-    ativo: bool
+    pub nome: String,
+
+    #[serde(skip_deserializing)]
+    pub situacao: EstadoChave,
+
+    pub ativo: bool
+}
+
+impl Default for EstadoChave {
+    fn default() -> Self {
+        EstadoChave::Disponivel
+    }
 }
 ```
 
@@ -26,18 +37,19 @@ struct Chave {
 ```
 use mongodb::bson::DateTime;
 use mongodb::bson::oid::ObjectId;
-use serde::{Deserialize, Serialize};
+use rocket::serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug)]
-struct Servidor {
+#[serde(crate = "rocket::serde")]
+pub struct Servidor {
     #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
-    id: Option<ObjectId>,
+    pub id: Option<ObjectId>,
 
-    nome: String,
-    cpf: String,
-    contato: String,
-    nascimento: DateTime,
-    ativo: bool,
+    pub nome: String,
+    pub cpf: String,
+    pub contato: String,
+    pub nascimento: DateTime,
+    pub ativo: bool,
 }
 ```
 
@@ -45,15 +57,30 @@ struct Servidor {
 ```
 use mongodb::bson::DateTime;
 use mongodb::bson::oid::ObjectId;
-use serde::{Deserialize, Serialize};
+use rocket::serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug)]
-struct Emprestimo {
+#[serde(crate = "rocket::serde")]
+pub struct Emprestimo {
     #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
-    id: Option<ObjectId>,
+    pub id: Option<ObjectId>,
 
-    data_hora_emprestimo: DateTime,
-    data_hora_devolucao: DateTime,
-    ativo: bool
+    pub data_hora_emprestimo: DateTime,
+    pub data_hora_devolucao: Option<DateTime>,
+
+    pub chave: DocumentoLigado,
+    pub servidor_retirada: DocumentoLigado,
+    pub servidor_devolucao: Option<DocumentoLigado>,
+
+    pub ativo: bool
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+#[serde(crate = "rocket::serde")]
+pub struct DocumentoLigado {
+    #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
+    pub id: Option<ObjectId>,
+
+    pub nome: String
 }
 ```
