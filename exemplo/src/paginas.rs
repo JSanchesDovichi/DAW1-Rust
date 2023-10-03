@@ -22,13 +22,6 @@ async fn index() -> Template {
             contato: "telefone".to_string(),
             nascimento: DateTime::now()
         }
-        /*
-        Pessoa{
-            id: None,
-            nome: "João Pedro Sanches".to_string(),
-            idade: 25
-        }
-         */
     );
 
     lista_teste_pessoas.push(
