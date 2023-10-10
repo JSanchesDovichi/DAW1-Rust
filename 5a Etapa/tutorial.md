@@ -1,3 +1,11 @@
+### Crie o arquivo de importação para os DAOs:
+No arquivo src/dao/mod.rs
+```
+pub mod emprestimo;
+pub mod chave;
+pub mod servidor;
+```
+
 ### Função CRUD para listar as chaves disponíveis no sistema:
 (No arquivo src/dao/chave.rs)
 ```
@@ -137,6 +145,13 @@ impl ColecaoChaves {
 </body>
 </html>
 ```
+### Crie o arquivo de importação para as rotas:
+No arquivo src/rotas/mod.rs
+```
+pub mod chaves;
+pub mod servidor;
+```
+
 
 ### Endpoint de acesso para o template:
 (No arquivo src/rotas/chaves.rs)
