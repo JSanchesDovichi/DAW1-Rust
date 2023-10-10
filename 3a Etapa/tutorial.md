@@ -1,6 +1,15 @@
 # Implementação de classes:
 
+# Criação da pasta de classes do projeto:
+Crie a pasta classes e o arquivo mod.rs dentro dela: adicione as importações para os arquivos:
+```
+pub mod emprestimo;
+pub mod chave;
+pub mod servidor;
+```
+
 # Chave
+(No arquivo classes/chave.rs)
 ```
 use mongodb::bson::oid::ObjectId;
 use rocket::serde::{Deserialize, Serialize};
@@ -34,6 +43,7 @@ impl Default for EstadoChave {
 ```
 
 # Servidor
+(No arquivo classes/servidor.rs)
 ```
 use mongodb::bson::DateTime;
 use mongodb::bson::oid::ObjectId;
@@ -54,6 +64,7 @@ pub struct Servidor {
 ```
 
 # Emprestimo
+(No arquivo classes/emprestimo.rs)
 ```
 use mongodb::bson::DateTime;
 use mongodb::bson::oid::ObjectId;
@@ -83,4 +94,10 @@ pub struct DocumentoLigado {
 
     pub nome: String
 }
+```
+
+### Importar as classes no projeto
+Adicone no arquivo main.rs:
+```
+mod classes;
 ```

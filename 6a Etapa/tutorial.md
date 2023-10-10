@@ -179,4 +179,3 @@ async fn criar_chave(database: &State<Database>, chave_para_criacao: Json<ChaveP
     }
 }
 ```
-
