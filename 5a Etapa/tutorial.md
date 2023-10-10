@@ -1,9 +1,7 @@
 ### Crie o arquivo de importação para os DAOs:
 No arquivo src/dao/mod.rs
 ```
-pub mod emprestimo;
 pub mod chave;
-pub mod servidor;
 ```
 
 ### Função CRUD para listar as chaves disponíveis no sistema:
@@ -54,6 +52,63 @@ impl ColecaoChaves {
         }
     }
 
+}
+```
+
+### Crie o arquivo de rotas de templates:
+Crie src/paginas.rs
+```
+use mongodb::bson::DateTime;
+use rocket::{get, Route, routes};
+use rocket_dyn_templates::{context, Template};
+use crate::classes::servidor::Servidor;
+
+pub fn rotas() -> Vec<Route> {
+    routes![
+        index
+    ]
+}
+
+#[get("/index")]
+async fn index() -> Template {
+    let mut lista_teste_pessoas: Vec<Servidor> = vec![];
+
+    lista_teste_pessoas.push(
+        Servidor {
+            ativo: true,
+            id: None,
+            nome: "João Pedro Sanches Dovichi".to_string(),
+            cpf: "Teste".to_string(),
+            contato: "telefone".to_string(),
+            nascimento: DateTime::now()
+        }
+    );
+
+    lista_teste_pessoas.push(
+        Servidor {
+            ativo: true,
+            id: None,
+            nome: "Alex Ferreira".to_string(),
+            cpf: "Teste".to_string(),
+            contato: "telefone".to_string(),
+            nascimento: DateTime::now()
+        }
+    );
+
+    lista_teste_pessoas.push(
+        Servidor {
+            ativo: true,
+            id: None,
+            nome: "Paulo Eduardo".to_string(),
+            cpf: "Teste".to_string(),
+            contato: "telefone".to_string(),
+            nascimento: DateTime::now()
+        }
+    );
+
+    Template::render("index", context! {
+        pessoas: lista_teste_pessoas
+    })
 }
 ```
 
@@ -149,7 +204,6 @@ impl ColecaoChaves {
 No arquivo src/rotas/mod.rs
 ```
 pub mod chaves;
-pub mod servidor;
 ```
 
 
@@ -199,7 +253,7 @@ mod rotas;
 
 mod dao;
 
-use rotas::{chaves, servidor};
+use rotas::chaves;
 
 #[launch]
 async fn rocket() -> _ {
@@ -212,6 +266,5 @@ async fn rocket() -> _ {
         .manage(handler_database)
         .mount("/", paginas::rotas())
         .mount("/chaves", chaves::rotas())
-        .mount("/servidores", servidor::rotas())
 }
 ```
