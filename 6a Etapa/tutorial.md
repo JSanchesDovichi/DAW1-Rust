@@ -1,5 +1,5 @@
 ### Adicionar função para inserir chave no CRUD de chaves:
-(No arquivo dao/chaves.rs)
+(No arquivo src/dao/chaves.rs)
 ```
 pub async fn adicionar_chave(&self, nome_chave_nova: &str) -> Option<ObjectId> {
         let filtro = doc![
@@ -33,7 +33,7 @@ pub async fn adicionar_chave(&self, nome_chave_nova: &str) -> Option<ObjectId> {
 ```
 
 ### Template da página de criação de chaves:
-(Crie o arquivo paginas/criar_chave.html.tera)
+(Crie o arquivo src/paginas/criar_chave.html.tera)
 ```
 <!DOCTYPE html>
 <html lang="en">
@@ -159,7 +159,7 @@ pub async fn adicionar_chave(&self, nome_chave_nova: &str) -> Option<ObjectId> {
 ```
 
 ### Adicionar endpoint de acesso para o template:
-(No arquivo rotas/chaves.rs)
+(No arquivo src/rotas/chaves.rs)
 ```
 #[get("/nova")]
 async fn pagina_criar_chave() -> Template {

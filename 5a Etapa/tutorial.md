@@ -1,5 +1,5 @@
 ### Função CRUD para listar as chaves disponíveis no sistema:
-(dao/chave.rs)
+(No arquivo src/dao/chave.rs)
 ```
 use crate::classes::chave::Chave;
 use mongodb::bson::oid::ObjectId;
@@ -50,7 +50,7 @@ impl ColecaoChaves {
 ```
 
 ### Template da página de chaves:
-(Crie o arquivo paginas/chaves.html.tera)
+(Crie o arquivo src/paginas/chaves.html.tera)
 ```
 <!DOCTYPE html>
 <html>
@@ -139,7 +139,7 @@ impl ColecaoChaves {
 ```
 
 ### Endpoint de acesso para o template:
-(No arquivo rotas/chaves.rs)
+(No arquivo src/rotas/chaves.rs)
 ```
 use mongodb::bson::doc;
 use mongodb::Database;
@@ -171,7 +171,7 @@ async fn listar_chaves(database: &State<Database>) -> Template {
 ```
 
 ### Adicionando a rota na api:
-(No arquivo main.rs)
+(No arquivo src/main.rs)
 ```
 use rocket::{launch};
 use rocket_dyn_templates::Template;
