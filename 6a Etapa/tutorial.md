@@ -1,7 +1,75 @@
 ### Adicionar função para inserir chave no CRUD de chaves:
 (No arquivo src/dao/chaves.rs)
+
 ```
-pub async fn adicionar_chave(&self, nome_chave_nova: &str) -> Option<ObjectId> {
+use crate::classes::chave::Chave;
+use crate::enums::EstadoChave;
+use mongodb::bson::oid::ObjectId;
+use mongodb::options::UpdateOptions;
+use mongodb::{Collection, Database};
+use mongodb::bson::doc;
+use rocket::log::private::error;
+use rocket::serde::json::Json;
+use rocket::State;
+use rocket::futures::StreamExt;
+use rocket::http::Status;
+use std::str::FromStr;
+
+pub struct ColecaoChaves {
+    pub colecao: Collection<Chave>,
+}
+
+impl ColecaoChaves {
+    pub fn default(database: &State<Database>) -> Self {
+        ColecaoChaves {
+            colecao: database.collection("Chaves")
+        }
+    }
+
+    pub async fn listar_chaves(&self) -> Vec<Chave> {
+        let filtro = doc![];
+
+        match self.colecao.find(filtro, None).await {
+            Ok(resultados) => {
+                let mut lista_chaves_encontradas = vec![];
+
+                let map = resultados.map(|pessoa| pessoa);
+                let chaves_encontradas = map.collect::<Vec<_>>().await;
+
+                for chave_encontrada in chaves_encontradas.into_iter().flatten() {
+                    lista_chaves_encontradas.push(chave_encontrada);
+                }
+
+                lista_chaves_encontradas
+            }
+            Err(e) => {
+                error!("{e}");
+                vec![]
+            }
+        }
+    }
+
+    pub async fn buscar_chave(&self, id: &str) -> Option<Chave> {
+        let Ok(id_convertido) = ObjectId::from_str(id) else {
+            return None;
+        };
+
+        let filtro = doc![
+            "_id": id_convertido
+        ];
+
+        match self.colecao.find_one(filtro, None).await {
+            Ok(chave_encontrada) => {
+                chave_encontrada
+            }
+            Err(e) => {
+                println!("{e}");
+                None
+            }
+        }
+    }
+
+    pub async fn adicionar_chave(&self, nome_chave_nova: &str) -> Option<ObjectId> {
         let filtro = doc![
             "nome": &nome_chave_nova
         ];
@@ -30,6 +98,8 @@ pub async fn adicionar_chave(&self, nome_chave_nova: &str) -> Option<ObjectId> {
 
         None
     }
+
+}
 ```
 
 ### Template da página de criação de chaves:
@@ -161,6 +231,47 @@ pub async fn adicionar_chave(&self, nome_chave_nova: &str) -> Option<ObjectId> {
 ### Adicionar endpoint de acesso para o template:
 (No arquivo src/rotas/chaves.rs)
 ```
+use mongodb::bson::doc;
+use mongodb::Database;
+use rocket::{Route, routes, get, State, put, delete, patch};
+use rocket::http::Status;
+use rocket::serde::json::Json;
+use crate::classes::chave::{Chave, ChaveParaCriacao};
+use crate::dao::chave::ColecaoChaves;
+use rocket_dyn_templates::{context, Template};
+
+pub fn rotas() -> Vec<Route> {
+    routes![
+        listar_chaves,
+        buscar_chave,
+        pagina_criar_chave,
+        remover_chave,
+        atualizar_chave,
+        criar_chave
+    ]
+}
+
+#[get("/")]
+async fn listar_chaves(database: &State<Database>) -> Template {
+    let lista_chaves = ColecaoChaves::default(database).listar_chaves().await;
+
+    Template::render("chaves", context! {
+        chaves: lista_chaves
+    })
+}
+
+#[get("/<id>")]
+async fn buscar_chave(database: &State<Database>, id: &str) -> (Status, Json<Option<Chave>>) {
+    let colecao_chaves = ColecaoChaves::default(database);
+
+    //return colecao_pessoas.buscar_pessoa(pessoa).await;
+    if let Some(chave) = colecao_chaves.buscar_chave(id).await {
+        return (Status::Found, Json(Some(chave)));
+    }
+
+    (Status::NotFound, Json(None))
+}
+
 #[get("/nova")]
 async fn pagina_criar_chave() -> Template {
     Template::render("criar_chave", context! {})
