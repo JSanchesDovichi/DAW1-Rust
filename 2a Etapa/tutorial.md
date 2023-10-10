@@ -74,7 +74,7 @@ pub async fn get_database() -> Option<Database> {
 [default]
 address = "0.0.0.0"
 port = 8080
-template_dir = "paginas"
+template_dir = "src/paginas"
 ```
 
 * Neste momento, é uma boa ideia tentar executar a API, para ver se está tudo funcionando,
