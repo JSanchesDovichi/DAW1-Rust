@@ -165,10 +165,6 @@ use rocket_dyn_templates::{context, Template};
 pub fn rotas() -> Vec<Route> {
     routes![
         listar_chaves,
-        buscar_chave,
-        criar_chave,
-        remover_chave,
-        atualizar_chave
     ]
 }
 
