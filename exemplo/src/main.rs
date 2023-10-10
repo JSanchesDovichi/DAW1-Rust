@@ -1,13 +1,13 @@
-use rocket::{launch};
+use rocket::launch;
+use rocket_cors::CorsOptions;
 use rocket_dyn_templates::Template;
 
 mod conexao;
 mod paginas;
 mod classes;
-
 mod rotas;
-
 mod dao;
+mod enums;
 
 use rotas::{chaves, servidor};
 
@@ -17,7 +17,12 @@ async fn rocket() -> _ {
         panic!("Não foi possivel iniciar a conexão com o banco de dados!")
     };
 
+    let Ok(cors_options) = CorsOptions::default().to_cors() else {
+        std::process::exit(0);
+      };
+
     rocket::build()
+        .attach(cors_options)
         .attach(Template::fairing())
         .manage(handler_database)
         .mount("/", paginas::rotas())

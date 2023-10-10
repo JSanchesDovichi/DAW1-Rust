@@ -3,7 +3,7 @@ use mongodb::Database;
 use rocket::{Route, routes, get, State, put, delete, patch};
 use rocket::http::Status;
 use rocket::serde::json::Json;
-use crate::classes::chave::{Chave};
+use crate::classes::chave::{Chave, ChaveParaCriacao};
 use crate::dao::chave::ColecaoChaves;
 use rocket_dyn_templates::{context, Template};
 
@@ -11,9 +11,10 @@ pub fn rotas() -> Vec<Route> {
     routes![
         listar_chaves,
         buscar_chave,
-        criar_chave,
+        pagina_criar_chave,
         remover_chave,
-        atualizar_chave
+        atualizar_chave,
+        criar_chave
     ]
 }
 
@@ -38,15 +39,22 @@ async fn buscar_chave(database: &State<Database>, id: &str) -> (Status, Json<Opt
     (Status::NotFound, Json(None))
 }
 
-#[put("/", data = "<chave_nova>")]
-async fn criar_chave(database: &State<Database>, chave_nova: Json<Chave>) -> Option<String> {
+#[get("/nova")]
+async fn pagina_criar_chave() -> Template {
+    Template::render("criar_chave", context! {})
+}
+
+
+
+#[put("/", data = "<chave_para_criacao>")]
+async fn criar_chave(database: &State<Database>, chave_para_criacao: Json<ChaveParaCriacao>) -> Status {
     let colecao_chaves = ColecaoChaves::default(database);
 
-    if let Some(id_inserido) = colecao_chaves.adicionar_chave(chave_nova).await {
-        return Some(id_inserido.to_string());
+    if colecao_chaves.adicionar_chave(&chave_para_criacao.nome).await.is_some() {
+        Status::Ok
+    } else {
+        Status::Conflict
     }
-
-    None
 }
 
 #[delete("/", data = "<chave_remocao>")]

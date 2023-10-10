@@ -1,12 +1,8 @@
+use std::fmt::Debug;
 use mongodb::bson::oid::ObjectId;
 use rocket::serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
-#[serde(crate = "rocket::serde")]
-pub enum EstadoChave {
-    Emprestada,
-    Disponivel
-}
+use crate::enums::EstadoChave; 
 
 #[derive(Deserialize, Serialize, Debug)]
 #[serde(crate = "rocket::serde")]
@@ -22,8 +18,8 @@ pub struct Chave {
     pub ativo: bool
 }
 
-impl Default for EstadoChave {
-    fn default() -> Self {
-        EstadoChave::Disponivel
-    }
+#[derive(Deserialize, Serialize)]
+#[serde(crate = "rocket::serde")]
+pub struct ChaveParaCriacao {
+    pub nome: String,
 }

@@ -1,5 +1,7 @@
 use crate::classes::chave::Chave;
+use crate::enums::EstadoChave;
 use mongodb::bson::oid::ObjectId;
+use mongodb::options::UpdateOptions;
 use mongodb::{Collection, Database};
 use mongodb::bson::doc;
 use rocket::log::private::error;
@@ -63,18 +65,34 @@ impl ColecaoChaves {
         }
     }
 
-    pub async fn adicionar_chave(&self, mut chave_nova: Json<Chave>) -> Option<ObjectId> {
-        chave_nova.ativo = true;
+    pub async fn adicionar_chave(&self, nome_chave_nova: &str) -> Option<ObjectId> {
+        let filtro = doc![
+            "nome": &nome_chave_nova
+        ];
 
-        match self.colecao.insert_one(&*chave_nova, None).await {
+        let atualizacao = doc![
+            "$set": doc![
+                "situacao": EstadoChave::Disponivel,
+                "ativo": true
+            ]
+        ];
+
+        let opcoes = UpdateOptions::builder().upsert(true).build();
+
+        match self.colecao.update_one(filtro, atualizacao, opcoes).await {
             Ok(resultado) => {
-                resultado.inserted_id.as_object_id()
-            }
+
+                if let Some(id_atualizaco) = resultado.upserted_id {
+                    return id_atualizaco.as_object_id();
+                }
+            },
             Err(e) => {
-                println!("{e}");
-                None
+                println!("Erro ao criar/atualizar chave: {e}");
+
             }
         }
+
+        None
     }
 
     pub async fn remover_chave(&self, chave: Json<Chave>) -> Status {

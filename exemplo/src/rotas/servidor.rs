@@ -2,7 +2,6 @@ use mongodb::Database;
 use rocket::{Route, routes, get, State, put, delete, patch};
 use rocket::http::Status;
 use rocket::serde::json::Json;
-use crate::classes::chave::Chave;
 use crate::classes::servidor::Servidor;
 use crate::dao::servidor::ColecaoServidores;
 

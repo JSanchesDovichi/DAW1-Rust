@@ -1,3 +1,4 @@
+/*
 use mongodb::bson::Bson::DateTime;
 use mongodb::{bson, Collection};
 use crate::classes::emprestimo::Emprestimo;
@@ -29,3 +30,4 @@ impl ColecaoEmprestimos {
 
     */
 }
+*/
