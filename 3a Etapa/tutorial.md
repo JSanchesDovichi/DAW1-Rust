@@ -97,7 +97,7 @@ pub struct DocumentoLigado {
 ```
 
 ### Importar as classes no projeto
-Adicone no arquivo src/main.rs:
+Adicone no arquivo src/main.rs, embaixo da linha "mod conexao.rs":
 ```
 mod classes;
 ```
