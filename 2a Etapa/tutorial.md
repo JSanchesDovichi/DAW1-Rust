@@ -39,6 +39,7 @@ async fn rocket() -> _ {
     };
 
     rocket::build()
+    .attach(cors_options)
     
 }
 ```

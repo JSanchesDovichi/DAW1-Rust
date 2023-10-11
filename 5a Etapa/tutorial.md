@@ -228,8 +228,13 @@ async fn rocket() -> _ {
         panic!("Não foi possivel iniciar a conexão com o banco de dados!")
     };
 
+    let Ok(cors_options) = CorsOptions::default().to_cors() else {
+        std::process::exit(0)
+    };
+
     rocket::build()
         .attach(Template::fairing())
+        .attach(cors_options)
         .manage(handler_database)
         .mount("/chaves", chaves::rotas())
 }
