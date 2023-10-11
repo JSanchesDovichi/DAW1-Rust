@@ -213,6 +213,7 @@ impl From<EstadoChave> for Bson {
 ```
 use rocket::{launch};
 use rocket_dyn_templates::Template;
+use rocket_cors::CorsOptions;
 
 mod conexao;
 mod classes;
