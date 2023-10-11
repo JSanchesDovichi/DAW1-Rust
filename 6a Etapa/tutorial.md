@@ -245,8 +245,6 @@ pub fn rotas() -> Vec<Route> {
         listar_chaves,
         buscar_chave,
         pagina_criar_chave,
-        remover_chave,
-        atualizar_chave,
         criar_chave
     ]
 }

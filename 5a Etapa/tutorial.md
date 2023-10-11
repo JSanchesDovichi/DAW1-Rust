@@ -178,6 +178,36 @@ async fn listar_chaves(database: &State<Database>) -> Template {
 }
 ```
 
+### Crie o arquivo de enumerações
+No arquivo enums.rs
+```
+use std::fmt;
+use std::fmt::{Debug, Display};
+use mongodb::bson::Bson;
+use rocket::serde::{Deserialize, Serialize}; 
+
+#[derive(Deserialize, Serialize, Debug, Default)]
+#[serde(crate = "rocket::serde")]
+pub enum EstadoChave {
+    #[default]
+    Disponivel,
+
+    Emprestada
+}
+
+impl Display for EstadoChave {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        Debug::fmt(self, f)
+    }
+}
+
+impl From<EstadoChave> for Bson {
+    fn from(item: EstadoChave) -> Self {
+        Bson::String(item.to_string())
+    }
+}
+```
+
 ### Adicionando a rota na api:
 (No arquivo src/main.rs)
 ```
@@ -186,10 +216,9 @@ use rocket_dyn_templates::Template;
 
 mod conexao;
 mod classes;
-
 mod rotas;
-
 mod dao;
+mod enums;
 
 use rotas::chaves;
 
