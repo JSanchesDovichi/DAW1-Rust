@@ -1,4 +1,5 @@
-exemplo/Cargo.lock
-exemplo/target
-exemplo/.idea
+exemplos/Cargo.lock
+exemplos/target
+exemplos/.idea
 .idea
+.vscode
