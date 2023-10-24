@@ -26,6 +26,7 @@ Todas as dependências do projeto são armazenadas no arquivo Cargo.toml.
 ### Framework Rocket
 
 * No arquivo Cargo.toml, adicionar na seção [dependencies]:
+* Link para documentação da framework: [Rocket](https://rocket.rs/v0.5-rc/guide/)
 
 > ALERTA: Adicione apenas as linhas destacadas em verde. NÃO copie o "+".
 
@@ -43,11 +44,12 @@ edition = "2021"
 +   rocket_cors = { git = "https://github.com/lawliet89/rocket_cors", branch = "master" }
 ```
 
-* Link para documentação da framework: [Rocket](https://rocket.rs/v0.5-rc/guide/)
+> Arquivo exemplo disponível em [Cargo.toml](../exemplos/etapa1/Cargo.toml)
 
-### Instalação de outras dependências necessárias
+### Dependência MongoDB
 
 * No arquivo Cargo.toml, adicionar na seção [dependencies]:
+* Link para documentação da dependência: [MongoDB](https://docs.rs/mongodb/2.6.1/mongodb/)
 
 ```diff
 [package]
@@ -64,7 +66,7 @@ rocket_cors = { git = "https://github.com/lawliet89/rocket_cors", branch = "mast
 + mongodb = "2.6.1"
 ```
 
-* Link para documentação da dependência: [MongoDB](https://docs.rs/mongodb/2.6.1/mongodb/)
+> Arquivo exemplo disponível em [Cargo.toml](../exemplos/etapa1/Cargo.toml)
 
 ## Adicionar código para iniciar a API
 
@@ -87,9 +89,20 @@ rocket_cors = { git = "https://github.com/lawliet89/rocket_cors", branch = "mast
 + }
 ```
 
+> Arquivo exemplo disponível em [main.rs](../exemplos/etapa1/src/main.rs)
+
 ## Mudar porta do servidor
 
 * Crie o arquivo Rocket.toml (no mesmo diretório do Cargo.toml), e adicione os campos:
+  
+```diff
+   .
+   ├── Cargo.toml
++ ├── Rocket.toml
+   └── src
+      └── main.rs
+
+```
 
 ```toml
 [default]
@@ -99,7 +112,9 @@ template_dir = "src/paginas"
 ```
 
 * Neste momento, é uma boa ideia tentar executar a API, para ver se está tudo funcionando,
-  além de baixar as dependências necessárias:
+  além de baixar as dependências necessárias.
+
+> O comando deve ser executado na mesma pasta em que se encontra o arquivo Cargo.toml
 
 ```sh
 cargo run
@@ -112,7 +127,7 @@ Finished dev [unoptimized + debuginfo] target(s) in 0.13s
      Running `target/debug/NOME_PROJETO`
 🔧 Configured for debug.
    >> address: 127.0.0.1
-   >> port: 8000
+   >> port: 8080
    >> workers: 12
    >> max blocking threads: 512
    >> ident: Rocket
@@ -131,7 +146,7 @@ Finished dev [unoptimized + debuginfo] target(s) in 0.13s
    >> X-Content-Type-Options: nosniff
    >> X-Frame-Options: SAMEORIGIN
    >> Permissions-Policy: interest-cohort=()
-🚀 Rocket has launched from http://127.0.0.1:8000
+🚀 Rocket has launched from http://127.0.0.1:8080
 ```
 
 Após o comando terminar, o servidor será iniciado, e estará acessível em <http://127.0.0.1:8080>
