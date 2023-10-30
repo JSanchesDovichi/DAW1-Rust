@@ -40,6 +40,8 @@ pub mod chave;
 pub mod servidor;
 ```
 
+> Arquivo exemplo disponível em [mod.rs](../exemplos/etapa3/src/classes/mod.rs)
+
 * Adicione o código a seguir para o arquivo chave.rs
 
 ```rust
@@ -70,6 +72,8 @@ pub struct ChaveParaCriacao {
 }
 ```
 
+> Arquivo exemplo disponível em [chave.rs](../exemplos/etapa3/src/classes/chave.rs)
+
 * Adicione o código a seguir para o arquivo servidor.rs
 
 ```rust
@@ -90,6 +94,8 @@ pub struct Servidor {
     pub ativo: bool,
 }
 ```
+
+> Arquivo exemplo disponível em [servidor.rs](../exemplos/etapa3/src/classes/servidor.rs)
 
 * Adicione o código a seguir para o arquivo emprestimo.rs
 
@@ -124,7 +130,10 @@ pub struct DocumentoLigado {
 }
 ```
 
+> Arquivo exemplo disponível em [emprestimo.rs](../exemplos/etapa3/src/classes/emprestimo.rs)
+
 * Adicione o código a seguir para o arquivo enums.rs
+
 ```rust
 use std::fmt;
 use std::fmt::{Debug, Display};
@@ -153,6 +162,8 @@ impl From<EstadoChave> for Bson {
 }
 ```
 
+> Arquivo exemplo disponível em [enums.rs](../exemplos/etapa3/src/classes/enums.rs)
+
 * Por fim, adicione a importação para essas classes e a enumeração no arquivo main.rs:
   
 ```diff
@@ -166,3 +177,5 @@ async fn rocket() -> _ {
     rocket::build()
 }
 ```
+
+> Arquivo exemplo disponível em [main.rs](../exemplos/etapa3/src/main.rs)
