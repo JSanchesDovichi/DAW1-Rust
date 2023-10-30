@@ -1,5 +1,9 @@
 # Criar um novo projeto
 
+Escolha uma pasta raiz onde o seu projeto ficará. Lembre-se de não se
+esquecer dessa pasta. O Projeto será criado como uma subpasta dentro
+dessa pasta.
+
 ```sh
 cargo new NOME_PROJETO
 ```
@@ -44,7 +48,7 @@ edition = "2021"
 +   rocket_cors = { git = "https://github.com/lawliet89/rocket_cors", branch = "master" }
 ```
 
-> Arquivo exemplo disponível em [Cargo.toml](../exemplos/etapa1/Cargo.toml)
+> Arquivo exemplo disponível em [Cargo.toml](../exemplos/etapa2/Cargo.toml)
 
 ### Dependência MongoDB
 
@@ -66,7 +70,7 @@ rocket_cors = { git = "https://github.com/lawliet89/rocket_cors", branch = "mast
 + mongodb = "2.6.1"
 ```
 
-> Arquivo exemplo disponível em [Cargo.toml](../exemplos/etapa1/Cargo.toml)
+> Arquivo exemplo disponível em [Cargo.toml](../exemplos/etapa2/Cargo.toml)
 
 ## Adicionar código para iniciar a API
 
@@ -85,11 +89,10 @@ rocket_cors = { git = "https://github.com/lawliet89/rocket_cors", branch = "mast
 + #[launch]
 + async fn rocket() -> _ {
 +     rocket::build()
-+     .attach(cors_options)
 + }
 ```
 
-> Arquivo exemplo disponível em [main.rs](../exemplos/etapa1/src/main.rs)
+> Arquivo exemplo disponível em [main.rs](../exemplos/etapa2/src/main.rs)
 
 ## Mudar porta do servidor
 
@@ -98,7 +101,7 @@ rocket_cors = { git = "https://github.com/lawliet89/rocket_cors", branch = "mast
 ```diff
    .
    ├── Cargo.toml
-+ ├── Rocket.toml
++  ├── Rocket.toml
    └── src
       └── main.rs
 
