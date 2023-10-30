@@ -1,16 +1,48 @@
-# Implementação de classes:
+# Implemenção da classes
 
-# Criação da pasta de classes do projeto:
-Crie a pasta src/classes e o arquivo mod.rs dentro dela: adicione as importações para os arquivos:
+## Crie os arquivos
+
+* Para criar as classes, primeiro crie a pasta classes dentro da pasta src:
+
+```diff
+    .
+    ├── Cargo.toml
+    ├── Rocket.toml
+    └── src
++     ├── classes
+       └── main.rs
+
 ```
+
+* Agora crie dentro dessa pasta os arquivos mod.rs, chave.rs, emprestimo.rs e servidor.rs,
+* Crie também o arquivo enums.rs na mesma pasta do arquivo main.rs
+
+```diff
+.
+├── Cargo.toml
+├── Rocket.toml
+└── src
++      ├── classes
++      │   ├── chave.rs
++      │   ├── emprestimo.rs
++      │   ├── mod.rs
++      │   └── servidor.rs
++      ├── enums.rs
+        └── main.rs
+
+```
+
+* Adicione o cõdigo a seguir para o arquivo mod.rs
+
+```rust
 pub mod emprestimo;
 pub mod chave;
 pub mod servidor;
 ```
 
-# Chave
-(Crie o arquivo src/classes/chave.rs)
-```
+* Adicione o código a seguir para o arquivo chave.rs
+
+```rust
 use std::fmt::Debug;
 use mongodb::bson::oid::ObjectId;
 use rocket::serde::{Deserialize, Serialize};
@@ -38,9 +70,9 @@ pub struct ChaveParaCriacao {
 }
 ```
 
-# Servidor
-(Crie o arquivo src/classes/servidor.rs)
-```
+* Adicione o código a seguir para o arquivo servidor.rs
+
+```rust
 use mongodb::bson::DateTime;
 use mongodb::bson::oid::ObjectId;
 use rocket::serde::{Deserialize, Serialize};
@@ -59,9 +91,9 @@ pub struct Servidor {
 }
 ```
 
-# Emprestimo
-(Crie o arquivo src/classes/emprestimo.rs)
-```
+* Adicione o código a seguir para o arquivo emprestimo.rs
+
+```rust
 use mongodb::bson::DateTime;
 use mongodb::bson::oid::ObjectId;
 use rocket::serde::{Deserialize, Serialize};
@@ -92,8 +124,45 @@ pub struct DocumentoLigado {
 }
 ```
 
-### Importar as classes no projeto
-Adicone no arquivo src/main.rs, embaixo da linha "mod conexao.rs":
+* Adicione o código a seguir para o arquivo enums.rs
+```rust
+use std::fmt;
+use std::fmt::{Debug, Display};
+use mongodb::bson::Bson;
+use rocket::serde::{Deserialize, Serialize}; 
+
+#[derive(Deserialize, Serialize, Debug, Default)]
+#[serde(crate = "rocket::serde")]
+pub enum EstadoChave {
+    #[default]
+    Disponivel,
+
+    Emprestada
+}
+
+impl Display for EstadoChave {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        Debug::fmt(self, f)
+    }
+}
+
+impl From<EstadoChave> for Bson {
+    fn from(item: EstadoChave) -> Self {
+        Bson::String(item.to_string())
+    }
+}
 ```
-mod classes;
+
+* Por fim, adicione a importação para essas classes e a enumeração no arquivo main.rs:
+  
+```diff
+use rocket::launch;
+
++ pub mod classes;
++ pub mod enums;
+
+#[launch]
+async fn rocket() -> _ {
+    rocket::build()
+}
 ```

@@ -96,7 +96,7 @@ rocket_cors = { git = "https://github.com/lawliet89/rocket_cors", branch = "mast
 
 ## Mudar porta do servidor
 
-* Crie o arquivo Rocket.toml (no mesmo diretório do Cargo.toml), e adicione os campos:
+* Crie o arquivo Rocket.toml (no mesmo diretório do Cargo.toml):
   
 ```diff
    .
@@ -106,6 +106,8 @@ rocket_cors = { git = "https://github.com/lawliet89/rocket_cors", branch = "mast
       └── main.rs
 
 ```
+
+* Adicione os campos dentro do arquivo:
 
 ```toml
 [default]
