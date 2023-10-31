@@ -1,11 +1,12 @@
-### Adicionar função para inserir chave no CRUD de chaves:
-(No arquivo src/dao/chaves.rs)
+# Adicionar função para inserir chaves no CRUD de chaves
 
-```
+* Adicione a função `adicionar_chave` no arquivo src/dao/chaves.rs
+  
+```diff
 use crate::classes::chave::Chave;
-use crate::enums::EstadoChave;
++ use crate::enums::EstadoChave;
 use mongodb::bson::oid::ObjectId;
-use mongodb::options::UpdateOptions;
++ use mongodb::options::UpdateOptions;
 use mongodb::{Collection, Database};
 use mongodb::bson::doc;
 use rocket::log::private::error;
@@ -49,62 +50,42 @@ impl ColecaoChaves {
         }
     }
 
-    pub async fn buscar_chave(&self, id: &str) -> Option<Chave> {
-        let Ok(id_convertido) = ObjectId::from_str(id) else {
-            return None;
-        };
++    pub async fn adicionar_chave(&self, nome_chave_nova: &str) -> Option<ObjectId> {
++        let filtro = doc![
++            "nome": &nome_chave_nova
++        ];
 
-        let filtro = doc![
-            "_id": id_convertido
-        ];
++        let atualizacao = doc![
++            "$set": doc![
++                "situacao": EstadoChave::Disponivel,
++                "ativo": true
++            ]
++        ];
 
-        match self.colecao.find_one(filtro, None).await {
-            Ok(chave_encontrada) => {
-                chave_encontrada
-            }
-            Err(e) => {
-                println!("{e}");
-                None
-            }
-        }
-    }
++        let opcoes = UpdateOptions::builder().upsert(true).build();
 
-    pub async fn adicionar_chave(&self, nome_chave_nova: &str) -> Option<ObjectId> {
-        let filtro = doc![
-            "nome": &nome_chave_nova
-        ];
++        match self.colecao.update_one(filtro, atualizacao, opcoes).await {
++            Ok(resultado) => {
 
-        let atualizacao = doc![
-            "$set": doc![
-                "situacao": EstadoChave::Disponivel,
-                "ativo": true
-            ]
-        ];
++                if let Some(id_atualizaco) = resultado.upserted_id {
++                    return id_atualizaco.as_object_id();
++                }
++            },
++            Err(e) => {
++                println!("Erro ao criar/atualizar chave: {e}");
++            }
++        }
 
-        let opcoes = UpdateOptions::builder().upsert(true).build();
-
-        match self.colecao.update_one(filtro, atualizacao, opcoes).await {
-            Ok(resultado) => {
-
-                if let Some(id_atualizaco) = resultado.upserted_id {
-                    return id_atualizaco.as_object_id();
-                }
-            },
-            Err(e) => {
-                println!("Erro ao criar/atualizar chave: {e}");
-
-            }
-        }
-
-        None
-    }
-
++        None
++    }
 }
 ```
 
-### Template da página de criação de chaves:
-(Crie o arquivo src/paginas/criar_chave.html.tera)
-```
+> Arquivo exemplo disponível em [chave.rs](../exemplos/etapa6/src/dao/chave.rs)
+
+* Crie o arquivo de template src/paginas/criar_chave.html.tera
+  
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -228,24 +209,26 @@ impl ColecaoChaves {
 </html>
 ```
 
-### Adicionar endpoint de acesso para o template:
-(No arquivo src/rotas/chaves.rs)
-```
+> Arquivo exemplo disponível em [criar_chave.html.tera](../exemplos/etapa6/src/paginas/criar_chave.html.tera)
+
+* Adicione as novas funções no arquivo src/rotas/chaves.rs
+
+```diff
 use mongodb::bson::doc;
 use mongodb::Database;
 use rocket::{Route, routes, get, State, put, delete, patch};
 use rocket::http::Status;
 use rocket::serde::json::Json;
-use crate::classes::chave::{Chave, ChaveParaCriacao};
+use crate::classes::chave::{Chave};
++ use crate::classes::chave::ChaveParaCriacao;
 use crate::dao::chave::ColecaoChaves;
 use rocket_dyn_templates::{context, Template};
 
 pub fn rotas() -> Vec<Route> {
     routes![
         listar_chaves,
-        buscar_chave,
-        pagina_criar_chave,
-        criar_chave
++        pagina_criar_chave,
++        criar_chave
     ]
 }
 
@@ -258,33 +241,23 @@ async fn listar_chaves(database: &State<Database>) -> Template {
     })
 }
 
-#[get("/<id>")]
-async fn buscar_chave(database: &State<Database>, id: &str) -> (Status, Json<Option<Chave>>) {
-    let colecao_chaves = ColecaoChaves::default(database);
++ #[get("/nova")]
++ async fn pagina_criar_chave() -> Template {
++    Template::render("criar_chave", context! {})
++ }
 
-    //return colecao_pessoas.buscar_pessoa(pessoa).await;
-    if let Some(chave) = colecao_chaves.buscar_chave(id).await {
-        return (Status::Found, Json(Some(chave)));
-    }
++ #[put("/", data = "<chave_para_criacao>")]
++ async fn criar_chave(database: &State<Database>, chave_para_criacao: Json<ChaveParaCriacao>) -> Status {
++    let colecao_chaves = ColecaoChaves::default(database);
 
-    (Status::NotFound, Json(None))
-}
-
-#[get("/nova")]
-async fn pagina_criar_chave() -> Template {
-    Template::render("criar_chave", context! {})
-}
-
-
-
-#[put("/", data = "<chave_para_criacao>")]
-async fn criar_chave(database: &State<Database>, chave_para_criacao: Json<ChaveParaCriacao>) -> Status {
-    let colecao_chaves = ColecaoChaves::default(database);
-
-    if colecao_chaves.adicionar_chave(&chave_para_criacao.nome).await.is_some() {
-        Status::Ok
-    } else {
-        Status::Conflict
-    }
-}
++    if colecao_chaves.adicionar_chave(&chave_para_criacao.nome).await.is_some() {
++        Status::Ok
++    } else {
++        Status::Conflict
++    }
++ }
 ```
+
+> Arquivo exemplo disponível em [chaves.rs](../exemplos/etapa6/src/rotas/chaves.rs)
+
+## Com isso já é possível cadastrar chaves e ver o registro delas na paginaa 127.0.0.1:8080/chaves/nova
