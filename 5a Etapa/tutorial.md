@@ -346,5 +346,5 @@ async fn rocket() -> _ {
 
 > Arquivo exemplo disponível em [main.rs](../exemplos/etapa5/src/main.rs)
 
-* Para testar esta etapa acesse o site <http://localhost:8080/chaves> para ver a listagem de chaves. Nenhuma chave foi cadastrada até o momento, portanto, a listagem deve aparecer vazia.
+* Para testar esta etapa acesse o site <http://127.0.0.1:8080/chaves> para ver a listagem de chaves. Nenhuma chave foi cadastrada até o momento, portanto, a listagem deve aparecer vazia.
   
