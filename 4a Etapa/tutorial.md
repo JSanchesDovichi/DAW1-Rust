@@ -35,6 +35,7 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
 
 ```
+> Arquivo exemplo disponível em [docker-compose.yaml](../docker-compose.yaml)
 
 * Agora use o terminal para navegar até a localização desse arquivo, e execute o seguinte comando:
   
@@ -101,6 +102,8 @@ pub async fn get_database() -> Result<Database> {
 }
 ```
 
+> Arquivo exemplo disponível em [conexao.rs](../exemplos/etapa4/src/conexao.rs)
+
 * Adicione o código de conexão no arquivo main.rs:
 
 ```diff
@@ -120,3 +123,5 @@ async fn rocket() -> _ {
 +    .manage(database_handler)
 }
 ```
+
+> Arquivo exemplo disponível em [main.rs](../exemplos/etapa4/src/main.rs)
