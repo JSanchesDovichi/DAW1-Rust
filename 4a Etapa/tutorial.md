@@ -35,6 +35,7 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
 
 ```
+
 > Arquivo exemplo disponível em [docker-compose.yaml](../docker-compose.yaml)
 
 * Agora use o terminal para navegar até a localização desse arquivo, e execute o seguinte comando:
@@ -49,7 +50,8 @@ sudo docker compose up -d
 sudo docker ps
 ```
 
-A saída do comando deve conter pelo menos os dois containeres a seguir:
+Na saída do comando, busque pelo nome dos containeres (último elemento de cada uma dos registros).
+Para que este projeto funcione corretamente, é obrigatório que os containeres de nome "daw1-rust-mongo-1" e "daw1-rust-mongo-express-1" estejam listados nesta saída.
 
 ```sh
 CONTAINER ID   IMAGE           COMMAND                  CREATED         STATUS         PORTS                                           NAMES

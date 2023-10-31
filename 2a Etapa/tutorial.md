@@ -155,3 +155,23 @@ Finished dev [unoptimized + debuginfo] target(s) in 0.13s
 ```
 
 Após o comando terminar, o servidor será iniciado, e estará acessível em <http://127.0.0.1:8080>
+
+IMPORTANTE: Os próximos passos envolvem mudanças no código fonte do projeto. Portante, será necessário recompilar o código.
+
+Para compilar o código, é obrigatório estar na mesma pasta em que o projeto foi criado, no contexto desse tutorial, utilizamos a pasta "NOME_PROJETO".
+
+* Para interromper o funcionamento da API, basta utilizar a combinação de teclas Ctrl+C no terminal em que ela esteja rodando:
+  
+<kbd>Ctrl</kbd> + <kbd>C</kbd>
+  
+* Para apenas compilar o projeto e não executar a API, basta utilizar o comando:
+  
+```sh
+cargo build
+```
+
+* Para compilar e executar a API automaticamente, basta utilizar o comando:
+  
+```sh
+cargo run
+```
