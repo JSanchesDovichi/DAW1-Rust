@@ -1,9 +1,14 @@
 use rocket::launch;
 use rocket_cors::CorsOptions;
+use rocket_dyn_templates::Template;
 
 mod classes;
 mod conexao;
 mod enums;
+mod rotas;
+mod dao;
+
+use rotas::chaves;
 
 #[launch]
 async fn rocket() -> _ {
@@ -16,6 +21,8 @@ async fn rocket() -> _ {
     };
 
     rocket::build()
+    .attach(Template::fairing())
         .attach(cors_options)
         .manage(database_handler)
+        .mount("/chaves", chaves::rotas())
 }

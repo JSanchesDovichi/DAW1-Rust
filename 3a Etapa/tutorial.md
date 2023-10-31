@@ -169,8 +169,8 @@ impl From<EstadoChave> for Bson {
 ```diff
 use rocket::launch;
 
-+ pub mod classes;
-+ pub mod enums;
++ mod classes;
++ mod enums;
 
 #[launch]
 async fn rocket() -> _ {

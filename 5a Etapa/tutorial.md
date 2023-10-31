@@ -1,12 +1,57 @@
-### Crie o arquivo de importação para os DAOs:
-No arquivo src/dao/mod.rs
+# Implemenção do DAO de Chaves
+
+## Crie os arquivos
+
+* Para criar as classes DAO, primeiro crie a pasta dao dentro da pasta src:
+
+```diff
+.
+├── Cargo.toml
+├── Rocket.toml
+└── src
+    ├── classes
+    │   ├── chave.rs
+    │   ├── emprestimo.rs
+    │   ├── mod.rs
+    │   └── servidor.rs
+    ├── conexao.rs
++  ├── dao
+    ├── enums.rs
+    └── main.rs
+
 ```
+
+* Agora dentro da pasta dao, crie os arquivos mod.rs e chave.rs:
+
+```diff
+.
+├── Cargo.toml
+├── Rocket.toml
+└── src
+    ├── classes
+    │   ├── chave.rs
+    │   ├── emprestimo.rs
+    │   ├── mod.rs
+    │   └── servidor.rs
+    ├── conexao.rs
+    ├── dao
++  │   ├── chave.rs
++  │   └── mod.rs
+    ├── enums.rs
+    └── main.rs
+```
+
+* Adicione o cõdigo a seguir para o arquivo dao/mod.rs
+
+```rust
 pub mod chave;
 ```
 
-### Função CRUD para listar as chaves disponíveis no sistema:
-(No arquivo src/dao/chave.rs)
-```
+> Arquivo exemplo disponível em [dao.rs](../exemplos/etapa5/src/dao/mod.rs)
+
+* Adicione o código a seguir para o arquivo dao/chave.rs
+
+```rust
 use crate::classes::chave::Chave;
 use mongodb::bson::oid::ObjectId;
 use mongodb::{Collection, Database};
@@ -55,9 +100,54 @@ impl ColecaoChaves {
 }
 ```
 
-### Template da página de chaves:
-(Crie o arquivo src/paginas/chaves.html.tera)
+> Arquivo exemplo disponível em [chave.rs](../exemplos/etapa5/src/dao/chave.rs)
+
+* Crie uma pasta chamada paginas dentro da pasta src:
+
+```diff
+.
+├── Cargo.toml
+├── Rocket.toml
+└── src
+    ├── classes
+    │   ├── chave.rs
+    │   ├── emprestimo.rs
+    │   ├── mod.rs
+    │   └── servidor.rs
+    ├── conexao.rs
+    ├── dao
+    │   ├── chave.rs
+    │   └── mod.rs
+    ├── enums.rs
+    ├── main.rs
++  └── paginas
 ```
+
+* Dentro da pasta paginas crie o arquivo chaves.html.tera:
+  
+```diff
+.
+├── Cargo.toml
+├── Rocket.toml
+└── src
+    ├── classes
+    │   ├── chave.rs
+    │   ├── emprestimo.rs
+    │   ├── mod.rs
+    │   └── servidor.rs
+    ├── conexao.rs
+    ├── dao
+    │   ├── chave.rs
+    │   └── mod.rs
+    ├── enums.rs
+    ├── main.rs
+    └── paginas
++         └── chaves.html.tera
+```
+
+* Adicione o seguinte código ao arquivo paginas/chaves.html.tera:
+
+```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -128,31 +218,72 @@ impl ColecaoChaves {
     </tbody>
   </table>
 </section>
-<button id="button">Gerar pdf!</button>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-<script>
-  const btn = document.getElementById("button");
-
-  btn.addEventListener("click", function(){
-  var element = document.getElementById('printable');
-  html2pdf().from(element).save('filename.pdf');
-  });
-</script>
 </body>
 </html>
 ```
-### Crie o arquivo de importação para as rotas:
-No arquivo src/rotas/mod.rs
+
+> Arquivo exemplo disponível em [chaves.html.tera](../exemplos/etapa5/src/paginas/chaves.html.tera)
+
+* Crie a pasta rotas dentro da pasta src do projeto:
+
+```diff
+.
+├── Cargo.toml
+├── Rocket.toml
+└── src
+    ├── classes
+    │   ├── chave.rs
+    │   ├── emprestimo.rs
+    │   ├── mod.rs
+    │   └── servidor.rs
+    ├── conexao.rs
+    ├── dao
+    │   ├── chave.rs
+    │   └── mod.rs
+    ├── enums.rs
+    ├── main.rs
+    ├── paginas
+    │   └── chaves.html.tera
++  └── rotas
 ```
+
+* Dentro da pasta rotas crie os arquivos mod.rs e chaves.rs:
+
+```diff
+.
+├── Cargo.toml
+├── Rocket.toml
+└── src
+    ├── classes
+    │   ├── chave.rs
+    │   ├── emprestimo.rs
+    │   ├── mod.rs
+    │   └── servidor.rs
+    ├── conexao.rs
+    ├── dao
+    │   ├── chave.rs
+    │   └── mod.rs
+    ├── enums.rs
+    ├── main.rs
+    ├── paginas
+    │   └── chaves.html.tera
+    └── rotas
++          ├── chaves.rs
++          └── mod.rs
+```
+
+* No arquivo rotas/mod.rs adicione o seguinte código:
+
+```rust
 pub mod chaves;
 ```
 
+> Arquivo exemplo disponível em [mod.rs](../exemplos/etapa5/src/rotas/mod.rs)
 
-### Endpoint de acesso para o template:
-(No arquivo src/rotas/chaves.rs)
-```
+* No arquivo rotas/chaves.rs adicione o seguinte código:
+
+```rust
 use mongodb::bson::doc;
 use mongodb::Database;
 use rocket::{Route, routes, get, State, put, delete, patch};
@@ -178,65 +309,42 @@ async fn listar_chaves(database: &State<Database>) -> Template {
 }
 ```
 
-### Crie o arquivo de enumerações
-No arquivo enums.rs
-```
-use std::fmt;
-use std::fmt::{Debug, Display};
-use mongodb::bson::Bson;
-use rocket::serde::{Deserialize, Serialize}; 
+> Arquivo exemplo disponível em [chaves.rs](../exemplos/etapa5/src/dao/chaves.rs)
 
-#[derive(Deserialize, Serialize, Debug, Default)]
-#[serde(crate = "rocket::serde")]
-pub enum EstadoChave {
-    #[default]
-    Disponivel,
+* Agora importe todo o código novo para o arquivo main.rs:
 
-    Emprestada
-}
-
-impl Display for EstadoChave {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        Debug::fmt(self, f)
-    }
-}
-
-impl From<EstadoChave> for Bson {
-    fn from(item: EstadoChave) -> Self {
-        Bson::String(item.to_string())
-    }
-}
-```
-
-### Adicionando a rota na api:
-(No arquivo src/main.rs)
-```
-use rocket::{launch};
-use rocket_dyn_templates::Template;
+```diff
+use rocket::launch;
 use rocket_cors::CorsOptions;
++ use rocket_dyn_templates::Template;
 
-mod conexao;
 mod classes;
-mod rotas;
-mod dao;
+mod conexao;
 mod enums;
++ mod rotas;
++ mod dao;
 
-use rotas::chaves;
++ use rotas::chaves;
 
 #[launch]
 async fn rocket() -> _ {
-    let Some(handler_database) = conexao::get_database().await else {
+    let Ok(database_handler) = conexao::get_database().await else {
         panic!("Não foi possivel iniciar a conexão com o banco de dados!")
     };
 
     let Ok(cors_options) = CorsOptions::default().to_cors() else {
-        std::process::exit(0)
+        std::process::exit(0);
     };
 
     rocket::build()
-        .attach(Template::fairing())
++        .attach(Template::fairing())
         .attach(cors_options)
-        .manage(handler_database)
-        .mount("/chaves", chaves::rotas())
+        .manage(database_handler)
++        .mount("/chaves", chaves::rotas())
 }
 ```
+
+> Arquivo exemplo disponível em [main.rs](../exemplos/etapa5/src/main.rs)
+
+* Para testar esta etapa acesse o site <http://localhost:8080/chaves> para ver a listagem de chaves. Nenhuma chave foi cadastrada até o momento, portanto, a listagem deve aparecer vazia.
+  
