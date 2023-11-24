@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Chaves disponíveis:</title>
+  <style>
+    .search-box {
+      text-align: center;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+    }
+
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-top: 50px;
+      margin-bottom: 30px;
+    }
+
+    table {
+      margin: 0 auto;
+      border: 2px solid #333;
+      border-collapse: collapse;
+      background-color: #fff;
+      width: 80%;
+      max-width: 800px;
+    }
+
+    th {
+      background-color: #333;
+      color: #fff;
+      padding: 10px;
+      font-size: 18px;
+      text-align: left;
+      width: 100%;
+    }
+
+    td {
+      border: 2px solid #333;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    tr:hover {
+      background-color: #ddd;
+    }
+  </style>
+</head>
+
+<body onload="gerarTabela()">
+  <section id="printable">
+
+    <h1>Chaves</h1>
+    <div class="search-box">
+      <input type="text" name="name" id="search-txt" placeholder="Busque uma chave" />
+      <a class="search-btn" href="#">
+        <i class="fa fa-search" aria-hidden="true"></i>
+      </a>
+      <input type="button" value="Filtrar chaves" onclick="gerarTabela()">
+    </div>
+    <table id="tabela_chaves">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Situação</th>
+          <th>Operações</th>
+        </tr>
+      </thead>
+    </table>
+  </section>
+
+</body>
+
+<script>
+  class Alteravel {
+  constructor(id_chave, id_campo_situacao, id_campo_nome) {
+    this.id_chave = id_chave;
+    this.id_campo_situacao = id_campo_situacao;
+    this.id_campo_nome = id_campo_nome;
+  }
+}
+
+  function gerarTabela() {
+    var tabela = document.getElementById("tabela_chaves");
+    var pesquisa = document.getElementById("search-txt");
+
+    while (tabela.rows.length > 1) {
+      tabela.deleteRow(1);
+    }
+
+    {% for chave in chaves %}
+
+    nova_chave = {
+      "nome": "{{ chave.nome }}",
+      "situacao": "{{ chave.situacao }}"
+    }
+
+    if (nova_chave.nome.includes(pesquisa.value)) {
+      var row = tabela.insertRow(tabela.rows.length);
+
+      var cell1 = row.insertCell(0);
+      var cell2 = row.insertCell(1);
+      var cell3 = row.insertCell(2);
+
+      cell1.innerHTML = nova_chave.nome;
+      //cell1.id = nova_chave.id + '_nome';
+      //cell1.setAttribute('contenteditable', true);
+      cell2.innerHTML = nova_chave.situacao;
+      //cell2.id = nova_chave.id + '_situacao';
+      //alert(nova_chave.id);
+      //cell2.setAttribute('contenteditable', true);
+
+      const botaoRemocao = document.createElement("button");
+      botaoRemocao.innerText = "Remover";
+      botaoRemocao.onclick = removerChave.bind(nova_chave.nome);
+
+      const botaoEditar = document.createElement("button");
+      botaoEditar.innerText = "Editar";
+      botaoEditar.onclick = editarChave.bind('click', nova_chave);
+
+      cell3.appendChild(botaoRemocao);
+      cell3.appendChild(botaoEditar);
+    }
+
+    {% endfor %}
+  }
+
+  function editarChave(nova_chave) {
+    var url = new URL("http://localhost:8080/chaves/editar/");
+
+    url.searchParams.append('name', nova_chave.nome);
+    url.searchParams.append('color', nova_chave.situacao);
+
+    document.location = url;
+  }
+
+  function removerChave(nome_chave) {
+    alert("Uma chave deve ser removida: " + nome_chave)
+  }
+  
+</script>
+
+</html>
