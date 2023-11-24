@@ -127,33 +127,27 @@
             var myInput = document.getElementById("id_nome_da_chave");
             var selectInput = document.getElementById("id_estado");
 
-
-
-            //if (myInput && myInput.value) {
-
             var dataObject = { 'placeholder': "placeholder" };
+
+            estado_novo = selectInput.value;
+
+            if(estado_novo == "") {
+                estado_novo = estado_original_chave;
+            }
 
             if (myInput && myInput.value) {
                 dataObject = {
                     nome_original: nome_original_chave,
                     nome_novo: myInput.value,
-                    estado_novo: selectInput.value
+                    estado_novo: estado_novo
                 };
             } else {
                 dataObject = {
                     nome_original: nome_original_chave,
                     nome_novo: nome_original_chave,
-                    estado_novo: selectInput.value
+                    estado_novo: estado_novo
                 };
             }
-
-            /*
-            const dataObject = {
-                nome_original: nome_original_chave,
-                nome_novo: myInput.value,
-                estado_novo: selectInput.value
-            };
-            */
 
             fetch('http://127.0.0.1:8080/chaves/', {
                 method: 'PATCH',
@@ -164,9 +158,9 @@
             }).then(response => {
                 //return respose.json()
                 if (response.status == 409) {
-                    alert("Houve um erro ao criar a chave!")
+                    alert("Houve um erro ao alterar a chave!")
                 } else if (response.status == 200) {
-                    alert("Chave criada com sucesso!")
+                    alert("Chave alterada com sucesso!")
                 }
             }).then(data => console.log(data));
             /*

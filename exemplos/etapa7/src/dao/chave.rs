@@ -23,7 +23,9 @@ impl ColecaoChaves {
     }
 
     pub async fn listar_chaves(&self) -> Vec<Chave> {
-        let filtro = doc![];
+        let filtro = doc![
+            "ativo": true
+        ];
 
         match self.colecao.find(filtro, None).await {
             Ok(resultados) => {
@@ -97,5 +99,49 @@ impl ColecaoChaves {
         }
 
         false
+    }
+
+    pub async fn remover_chave(&self, nome_chave: String) -> bool {
+        let filtro = doc![
+            "nome": nome_chave
+        ];
+
+        let atualizacao = doc![
+            "$set": doc![
+                "ativo": false,
+            ]
+        ];
+
+        match self.colecao.update_one(filtro, atualizacao, None).await {
+            Ok(resultado) => {
+                if resultado.modified_count == 1 {
+                    return true;
+                }
+            }
+            Err(e) => {
+                println!("Erro ao remover chave: {e}");
+            }
+        }
+
+        false
+
+        /*
+        let filtro = doc![
+            "nome": nome_chave
+        ];
+
+        match self.colecao.delete_one(filtro, None).await {
+            Ok(resultado) => {
+                if resultado.deleted_count == 1 {
+                    return true;
+                }
+            },
+            Err(e) => {
+                println!("Erro ao criar/atualizar chave: {e}");
+            }
+        }
+
+        false
+        */
     }
 }

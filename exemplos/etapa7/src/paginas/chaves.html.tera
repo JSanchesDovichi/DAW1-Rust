@@ -81,12 +81,12 @@
 
 <script>
   class Alteravel {
-  constructor(id_chave, id_campo_situacao, id_campo_nome) {
-    this.id_chave = id_chave;
-    this.id_campo_situacao = id_campo_situacao;
-    this.id_campo_nome = id_campo_nome;
+    constructor(id_chave, id_campo_situacao, id_campo_nome) {
+      this.id_chave = id_chave;
+      this.id_campo_situacao = id_campo_situacao;
+      this.id_campo_nome = id_campo_nome;
+    }
   }
-}
 
   function gerarTabela() {
     var tabela = document.getElementById("tabela_chaves");
@@ -111,16 +111,11 @@
       var cell3 = row.insertCell(2);
 
       cell1.innerHTML = nova_chave.nome;
-      //cell1.id = nova_chave.id + '_nome';
-      //cell1.setAttribute('contenteditable', true);
       cell2.innerHTML = nova_chave.situacao;
-      //cell2.id = nova_chave.id + '_situacao';
-      //alert(nova_chave.id);
-      //cell2.setAttribute('contenteditable', true);
 
       const botaoRemocao = document.createElement("button");
       botaoRemocao.innerText = "Remover";
-      botaoRemocao.onclick = removerChave.bind(nova_chave.nome);
+      botaoRemocao.onclick = removerChave.bind('click', nova_chave.nome);
 
       const botaoEditar = document.createElement("button");
       botaoEditar.innerText = "Editar";
@@ -137,15 +132,26 @@
     var url = new URL("http://localhost:8080/chaves/editar/");
 
     url.searchParams.append('name', nova_chave.nome);
-    url.searchParams.append('color', nova_chave.situacao);
+    url.searchParams.append('situacao', nova_chave.situacao);
 
     document.location = url;
   }
 
   function removerChave(nome_chave) {
-    alert("Uma chave deve ser removida: " + nome_chave)
+    fetch('http://localhost:8080/chaves/' + nome_chave, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    }).then(response => {
+      if (response.status == 409) {
+        alert("Houve um erro ao deletar a chave!")
+      } else if (response.status == 200) {
+        alert("Chave removida com sucesso!")
+      }
+    }).then(data => console.log(data));
   }
-  
+
 </script>
 
 </html>
