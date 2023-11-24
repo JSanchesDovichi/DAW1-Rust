@@ -5,11 +5,8 @@ use mongodb::bson::oid::ObjectId;
 use mongodb::options::UpdateOptions;
 use mongodb::{Collection, Database};
 use rocket::futures::StreamExt;
-use rocket::http::Status;
 use rocket::log::private::error;
-use rocket::serde::json::Json;
 use rocket::State;
-use std::str::FromStr;
 
 pub struct ColecaoChaves {
     pub colecao: Collection<Chave>,
@@ -124,24 +121,5 @@ impl ColecaoChaves {
         }
 
         false
-
-        /*
-        let filtro = doc![
-            "nome": nome_chave
-        ];
-
-        match self.colecao.delete_one(filtro, None).await {
-            Ok(resultado) => {
-                if resultado.deleted_count == 1 {
-                    return true;
-                }
-            },
-            Err(e) => {
-                println!("Erro ao criar/atualizar chave: {e}");
-            }
-        }
-
-        false
-        */
     }
 }

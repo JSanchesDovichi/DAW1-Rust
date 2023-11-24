@@ -11,3 +11,5 @@
 [Etapa 5](https://github.com/JSanchesDovichi/DAW1-Rust/blob/main/5a%20Etapa/tutorial.md)
 
 [Etapa 6](https://github.com/JSanchesDovichi/DAW1-Rust/blob/main/6a%20Etapa/tutorial.md)
+
+[Etapa 7](https://github.com/JSanchesDovichi/DAW1-Rust/blob/main/7a%20Etapa/tutorial.md)

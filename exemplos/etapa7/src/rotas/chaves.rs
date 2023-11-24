@@ -1,14 +1,9 @@
-use crate::classes::chave;
-use crate::classes::chave::Chave;
 use crate::classes::chave::ChaveParaCriacao;
 use crate::classes::chave::ChaveParaEdicao;
 use crate::dao::chave::ColecaoChaves;
-use crate::enums::EstadoChave;
 use mongodb::bson::doc;
 use mongodb::Database;
 use rocket::http::Status;
-use rocket::serde::Deserialize;
-use rocket::serde::Serialize;
 use rocket::serde::json::Json;
 use rocket::{delete, get, patch, put, routes, Route, State};
 use rocket_dyn_templates::{context, Template};
@@ -64,8 +59,6 @@ async fn editar_chave(
     } else {
         Status::Conflict
     }
-
-    //Status::NotImplemented
 }
 
 #[put("/", data = "<chave_para_criacao>")]

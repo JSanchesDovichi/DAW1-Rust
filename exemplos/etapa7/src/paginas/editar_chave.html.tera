@@ -108,10 +108,6 @@
 
 <body>
     <h2 id="id_cadastro_de_chaves">EDITAR CHAVE</h2>
-    <!--
-    <h1 style="color: #fff;">Nome anterior da chave: "{{ chave.nome }}"</h1>
-    <h1 style="color: #fff;">Estado anterior da chave: "{{ chave.estado }}"</h1>
-    -->
     <input type="text" name="nomeDaChave" id="id_nome_da_chave" placeholder="{{ chave.nome }}">
     <select name="estados" id="id_estado">
         <option value="" selected="{{ chave.estado }}" hidden="hidden">{{ chave.estado }}</option>
@@ -156,18 +152,12 @@
                 },
                 body: JSON.stringify(dataObject)
             }).then(response => {
-                //return respose.json()
                 if (response.status == 409) {
                     alert("Houve um erro ao alterar a chave!")
                 } else if (response.status == 200) {
                     alert("Chave alterada com sucesso!")
                 }
             }).then(data => console.log(data));
-            /*
-        } else {
-            alert("Escreva um nome antes de enviar!");
-        }
-        */
         }
 
     </script>
