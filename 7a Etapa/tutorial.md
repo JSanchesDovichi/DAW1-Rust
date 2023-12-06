@@ -332,8 +332,304 @@ impl ColecaoChaves {
                     alert("Houve um erro ao alterar a chave!")
                 } else if (response.status == 200) {
                     alert("Chave alterada com sucesso!")
+
+                    location.href = document.referrer  
                 }
             }).then(data => console.log(data));
+        }
+
+    </script>
+
+</body>
+
+</html>
+```
+
+* Substitua o arquivo src/paginas/chaves.html.tera com o seguinte código:
+
+```html
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Chaves disponíveis:</title>
+  <style>
+    .search-box {
+      text-align: center;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+    }
+
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-top: 50px;
+      margin-bottom: 30px;
+    }
+
+    table {
+      margin: 0 auto;
+      border: 2px solid #333;
+      border-collapse: collapse;
+      background-color: #fff;
+      width: 80%;
+      max-width: 800px;
+    }
+
+    th {
+      background-color: #333;
+      color: #fff;
+      padding: 10px;
+      font-size: 18px;
+      text-align: left;
+      width: 100%;
+    }
+
+    td {
+      border: 2px solid #333;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    tr:hover {
+      background-color: #ddd;
+    }
+  </style>
+</head>
+
+<body onload="gerarTabela()">
+  <section id="printable">
+
+    <h1>Chaves</h1>
+    <div class="search-box">
+      <input type="text" name="name" id="search-txt" placeholder="Busque uma chave" />
+      <a class="search-btn" href="#">
+        <i class="fa fa-search" aria-hidden="true"></i>
+      </a>
+      <input type="button" value="Filtrar chaves" onclick="gerarTabela()">
+      <br>
+      <input type="button" value="Criar chave nova" onclick="window.location.href = '/chaves/nova';">
+    </div>
+    <table id="tabela_chaves">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Situação</th>
+          <th>Operações</th>
+        </tr>
+      </thead>
+    </table>
+  </section>
+
+</body>
+
+<script>
+  class Alteravel {
+    constructor(id_chave, id_campo_situacao, id_campo_nome) {
+      this.id_chave = id_chave;
+      this.id_campo_situacao = id_campo_situacao;
+      this.id_campo_nome = id_campo_nome;
+    }
+  }
+
+  function gerarTabela() {
+    var tabela = document.getElementById("tabela_chaves");
+    var pesquisa = document.getElementById("search-txt");
+
+    while (tabela.rows.length > 1) {
+      tabela.deleteRow(1);
+    }
+
+    {% for chave in chaves %}
+
+    nova_chave = {
+      "nome": "{{ chave.nome }}",
+      "situacao": "{{ chave.situacao }}"
+    }
+
+    if (nova_chave.nome.includes(pesquisa.value)) {
+      var row = tabela.insertRow(tabela.rows.length);
+
+      var cell1 = row.insertCell(0);
+      var cell2 = row.insertCell(1);
+      var cell3 = row.insertCell(2);
+
+      cell1.innerHTML = nova_chave.nome;
+      cell2.innerHTML = nova_chave.situacao;
+
+      const botaoRemocao = document.createElement("button");
+      botaoRemocao.innerText = "Remover";
+      botaoRemocao.onclick = removerChave.bind('click', nova_chave.nome);
+
+      const botaoEditar = document.createElement("button");
+      botaoEditar.innerText = "Editar";
+      botaoEditar.onclick = editarChave.bind('click', nova_chave);
+
+      cell3.appendChild(botaoRemocao);
+      cell3.appendChild(botaoEditar);
+    }
+
+    {% endfor %}
+  }
+
+  function editarChave(nova_chave) {
+    var url = new URL("http://localhost:8080/chaves/editar/");
+
+    url.searchParams.append('name', nova_chave.nome);
+    url.searchParams.append('situacao', nova_chave.situacao);
+
+    document.location = url;
+  }
+
+  function removerChave(nome_chave) {
+    fetch('http://localhost:8080/chaves/' + nome_chave, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    }).then(response => {
+      if (response.status == 409) {
+        alert("Houve um erro ao deletar a chave!")
+      } else if (response.status == 200) {
+        alert("Chave removida com sucesso!")
+
+        window.location.reload();
+      }
+    }).then(data => console.log(data));
+  }
+
+</script>
+
+</html>
+```
+
+* Substitua o arquivo src/paginas/criar_chave.html.tera com o seguinte código:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chaves RUST</title>
+    <style>
+        /* Estilo para o corpo da página */
+        body {
+            background-color: #121212;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        /* Estilo para o cabeçalho h2 */
+        h2#id_cadastro_de_chaves {
+            font-size: 3em;
+            /* 48px em */
+            color: #fff;
+            text-align: center;
+            margin-bottom: 1.5em;
+            /* 30px em */
+            text-shadow: 0.1em 0.1em 0.2em rgba(0, 0, 0, 0.3);
+        }
+
+        /* Estilo para o input de texto */
+        input[type="text"] {
+            width: 18.75em;
+            /* 300px em */
+            padding: 1.25em;
+            /* 20px em */
+            margin: 1.25em 0;
+            /* 20px em */
+            border: 0.125em solid #ff6a00;
+            /* 2px em */
+            border-radius: 0.75em;
+            /* 12px em */
+            font-size: 1.5em;
+            /* 24px em */
+            background-color: #1a1a1a;
+            color: #fff;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Estilo para o input de texto ao receber foco */
+        input[type="text"]:focus {
+            border-color: #ff4500;
+            box-shadow: 0 0 1.25em rgba(255, 106, 0, 0.7);
+            /* 20px em */
+        }
+
+        /* Estilo para o botão */
+        button#id_botao_enviar {
+            padding: 1.25em 2.5em;
+            /* 20px em */
+            background-color: #ff6a00;
+            color: #fff;
+            border: none;
+            border-radius: 0.75em;
+            /* 12px em */
+            font-size: 1.75em;
+            /* 28px em */
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        /* Estilo para o botão ao passar o mouse sobre ele */
+        button#id_botao_enviar:hover {
+            background-color: #ff4500;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+    <h2 id="id_cadastro_de_chaves">CADASTRO DE CHAVE</h2>
+    <input type="text" name="nomeDaChave" id="id_nome_da_chave" placeholder="Nome da chave">
+    <button id="id_botao_enviar" type="button" onclick="funcaoDeClick()">ENVIAR</button>
+
+    <script>
+        function funcaoDeClick() {
+            var myInput = document.getElementById("id_nome_da_chave");
+            if (myInput && myInput.value) {
+
+                const dataObject = {
+                    nome: myInput.value,
+                };
+
+                fetch('http://127.0.0.1:8080/chaves', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(dataObject)
+                }).then(response => {
+                    //return respose.json()
+                    if (response.status == 409) {
+                        alert("Houve um erro ao criar a chave!")
+                    } else  if (response.status == 200) {
+                        alert("Chave criada com sucesso!")
+
+                        location.href = document.referrer                        
+                    }
+                }).then(data => console.log(data));
+            } else {
+                alert("Escreva um nome antes de enviar!");
+            }
         }
 
     </script>
