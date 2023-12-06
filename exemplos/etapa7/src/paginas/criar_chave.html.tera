@@ -107,6 +107,8 @@
                         alert("Houve um erro ao criar a chave!")
                     } else  if (response.status == 200) {
                         alert("Chave criada com sucesso!")
+
+                        location.href = document.referrer                        
                     }
                 }).then(data => console.log(data));
             } else {

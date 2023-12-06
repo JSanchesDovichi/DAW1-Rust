@@ -156,6 +156,8 @@
                     alert("Houve um erro ao alterar a chave!")
                 } else if (response.status == 200) {
                     alert("Chave alterada com sucesso!")
+
+                    location.href = document.referrer  
                 }
             }).then(data => console.log(data));
         }

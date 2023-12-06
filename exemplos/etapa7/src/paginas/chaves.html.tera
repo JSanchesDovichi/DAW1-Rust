@@ -65,6 +65,8 @@
         <i class="fa fa-search" aria-hidden="true"></i>
       </a>
       <input type="button" value="Filtrar chaves" onclick="gerarTabela()">
+      <br>
+      <input type="button" value="Criar chave nova" onclick="window.location.href = 'chaves/nova';">
     </div>
     <table id="tabela_chaves">
       <thead>
@@ -148,6 +150,8 @@
         alert("Houve um erro ao deletar a chave!")
       } else if (response.status == 200) {
         alert("Chave removida com sucesso!")
+
+        window.location.reload();
       }
     }).then(data => console.log(data));
   }
